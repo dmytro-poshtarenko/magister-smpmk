@@ -1,0 +1,23 @@
+[project]
+name = "syntez-modeley-labs"
+version = "0.1.0"
+description = "Лабораторні роботи з курсу «Синтез моделей та проектування моделюючих програмних комплексів» (ЧДТУ)"
+requires-python = ">=3.14"
+dependencies = [
+    "numpy>=2.3",
+    "scipy>=1.16",
+    "pandas>=2.3",
+    "matplotlib>=3.10",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4",
+    "python-docx>=1.2",
+    "lxml>=6.0",
+    "defusedxml>=0.7.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
