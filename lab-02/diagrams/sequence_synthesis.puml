@@ -1,0 +1,49 @@
+@startuml sequence_synthesis
+!include style.iuml
+skinparam sequenceMessageAlign left
+skinparam maxMessageSize 150
+hide footbox
+autonumber
+
+actor "Дослідник" as U
+boundary ":SynthesisCLI" as CLI
+control ":ModelSynthesizer" as SYN
+entity ":GaussSystem" as GS
+entity ":ReferenceModel" as REF
+entity ":PredictiveModel" as PM
+control ":ModelTester" as TST
+
+U -> CLI : run(файл, опорна модель)
+activate CLI
+CLI -> CLI : load_series(файл)
+CLI -> SYN : synthesize(series, reference)
+activate SYN
+SYN -> GS ** : build(series, reference)
+loop для кожної ділянки функції
+  GS -> REF : row(history)
+end
+SYN -> GS : solve()
+activate GS
+GS -> GS : normal()
+GS -> GS : gauss_elimination(G, g)
+GS --> SYN : коефіцієнти a
+deactivate GS
+SYN -> PM ** : create(reference, a)
+SYN --> CLI : model
+deactivate SYN
+CLI -> TST : sx(model, series)
+activate TST
+TST -> PM : fitted(series)
+TST --> CLI : S_x
+deactivate TST
+CLI -> TST : horizon(series, reference)
+activate TST
+loop k = 1, 2, … поки похибка n-ї точки ≤ δ
+  TST -> SYN : synthesize(перші n − k точок, reference)
+  TST -> PM : forecast(history, k)
+end
+TST --> CLI : горизонт H
+deactivate TST
+CLI --> U : модель, S_x, H, прогноз
+deactivate CLI
+@enduml

@@ -1,0 +1,99 @@
+@startuml class
+!include style.iuml
+skinparam linetype ortho
+skinparam nodesep 40
+skinparam ranksep 50
+
+class SynthesisCLI <<boundary>> {
+  + run(argv): int
+  + load_series(path, column): TimeSeries
+  + parse_pairwise(spec): ndarray
+  + show(text)
+}
+
+class ModelSynthesizer <<control>> {
+  + synthesize(series, reference): PredictiveModel
+}
+
+class ModelTester <<control>> {
+  + delta_max: float
+  + sx(model, series): float
+  + horizon(series, reference, max_steps): (int, list)
+}
+
+class DecisionSupport <<control>> {
+  + max_steps: int
+  + evaluate(series, candidates): list
+  + rank(rows): list
+}
+
+class TimeSeries <<entity>> {
+  + values: ndarray
+  + name: str
+  + head(n): TimeSeries
+}
+
+class ReferenceModel <<entity>> {
+  + name: str
+  + lags: int
+  + size: int
+  + row(history): ndarray
+  + formula(coefficients): str
+  + {static} kolmogorov_gabor(lags, degree): ReferenceModel
+}
+
+class Term <<entity>> {
+  + powers: tuple
+  + degree: int
+  + value(history): float
+  + label(): str
+}
+
+class GaussSystem <<entity>> {
+  + A: ndarray
+  + b: ndarray
+  + {static} build(series, reference): GaussSystem
+  + normal(divide): (ndarray, ndarray)
+  + solve(): ndarray
+}
+
+class PredictiveModel <<entity>> {
+  + coefficients: ndarray
+  + predict(history): float
+  + forecast(history, steps): ndarray
+  + fitted(series): ndarray
+}
+
+class Preferences <<entity>> {
+  + name: str
+  + pairwise: ndarray
+  + sx_max: float
+  + horizon_min: int
+  + delta_max: float
+  + weights: ndarray
+  + ahp: dict
+}
+
+class kg_asm <<utility>> {
+  + gauss_elimination(M, v): ndarray
+  + ahp_weights(matrix): dict
+  + standard_candidates(): list
+  + parse_terms(spec): ReferenceModel
+}
+
+SynthesisCLI --> DecisionSupport
+SynthesisCLI --> ModelSynthesizer
+SynthesisCLI ..> TimeSeries : <<create>>
+DecisionSupport --> "1" Preferences
+DecisionSupport --> ModelSynthesizer
+DecisionSupport --> ModelTester
+ModelTester --> ModelSynthesizer
+ModelSynthesizer ..> GaussSystem : <<create>>
+ModelSynthesizer ..> PredictiveModel : <<create>>
+GaussSystem ..> TimeSeries
+GaussSystem ..> ReferenceModel
+PredictiveModel --> "1" ReferenceModel
+ReferenceModel *-- "1..*" Term
+GaussSystem ..> kg_asm
+Preferences ..> kg_asm
+@enduml

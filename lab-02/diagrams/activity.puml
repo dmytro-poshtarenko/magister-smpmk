@@ -1,0 +1,35 @@
+@startuml activity
+!include style.iuml
+skinparam ActivityBackgroundColor white
+skinparam ActivityBorderColor black
+skinparam ActivityDiamondBackgroundColor white
+
+start
+:Отримати первинний опис F(T)
+з постійним кроком дискретизації;
+repeat
+  :Задати опорну модель —
+  набір членів полінома Колмогорова-Габора;
+  :Скласти умовні рівняння Гауса за ділянками функції;
+  if (Рівнянь не менше, ніж невідомих?) then (так)
+  else (ні)
+    :Повідомити про нестачу даних;
+    stop
+  endif
+  :Сформувати нормальні рівняння (FᵀF)·a = Fᵀ·y
+  і розв'язати їх методом Гауса;
+  :Обчислити СКВ S_x; H = 0, k = 1;
+  repeat
+    :Навчити модель за n − k точками
+    і спрогнозувати k наступних точок;
+    if (Похибка прогнозу n-ї точки ≤ δ?) then (так)
+      :H = k;
+    endif
+    :k = k + 1;
+  repeat while (Похибка ≤ δ і точок досить\nдля навчання?) is (так)
+  ->ні;
+repeat while (S_x > S_max або H < H_min?) is (так: змінити опорну\nмодель або крок)
+->ні;
+:Видати модель, прогноз і характеристики;
+stop
+@enduml

@@ -1,0 +1,23 @@
+{
+  "equations": 6,
+  "unknowns": 4,
+  "normal_matches_numpy": true,
+  "horizon_delta": 0.1,
+  "horizon": 0,
+  "horizon_steps": [
+    {
+      "steps": 1,
+      "train_points": 7,
+      "predicted": [
+        25.584905660357094
+      ],
+      "actual": [
+        11.0
+      ],
+      "error": 1.3259005145779177,
+      "acceptable": false
+    }
+  ],
+  "stage6_printed_formula_value": 19.952000000000012,
+  "stage6_printed_value": 17.6
+}

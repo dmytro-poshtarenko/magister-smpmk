@@ -1,0 +1,23 @@
+digraph "classes_asm" {
+rankdir=BT
+graph [fontname="Arial", dpi=200, nodesep=0.35, ranksep=0.45, pack=true, packmode="array_u3"];
+node [fontname="Arial", fontsize=11];
+edge [fontname="Arial", fontsize=10];
+charset="utf-8"
+"kg_asm.DecisionSupport" [color="black", fontcolor="black", label=<DecisionSupport>, shape="record", style="solid"];
+"kg_asm.GaussSystem" [color="black", fontcolor="black", label=<GaussSystem>, shape="record", style="solid"];
+"kg_asm.HorizonStep" [color="black", fontcolor="black", label=<HorizonStep>, shape="record", style="solid"];
+"kg_asm.ModelSynthesizer" [color="black", fontcolor="black", label=<ModelSynthesizer>, shape="record", style="solid"];
+"kg_asm.ModelTester" [color="black", fontcolor="black", label=<ModelTester>, shape="record", style="solid"];
+"kg_asm.PredictiveModel" [color="black", fontcolor="black", label=<PredictiveModel>, shape="record", style="solid"];
+"kg_asm.Preferences" [color="black", fontcolor="black", label=<Preferences>, shape="record", style="solid"];
+"kg_asm.ReferenceModel" [color="black", fontcolor="black", label=<ReferenceModel>, shape="record", style="solid"];
+"cli.SynthesisCLI" [color="black", fontcolor="black", label=<SynthesisCLI>, shape="record", style="solid"];
+"kg_asm.Term" [color="black", fontcolor="black", label=<Term>, shape="record", style="solid"];
+"kg_asm.TimeSeries" [color="black", fontcolor="black", label=<TimeSeries>, shape="record", style="solid"];
+"kg_asm.ModelTester" -> "kg_asm.ModelSynthesizer" [arrowhead="vee", arrowtail="none", fontcolor="black", label="synthesizer", style="solid"];
+"kg_asm.PredictiveModel" -> "kg_asm.ReferenceModel" [arrowhead="vee", arrowtail="none", fontcolor="black", label="reference", style="solid"];
+"kg_asm.ModelSynthesizer" -> "kg_asm.DecisionSupport" [arrowhead="diamond", arrowtail="none", fontcolor="black", label="synthesizer", style="solid"];
+"kg_asm.ModelTester" -> "kg_asm.DecisionSupport" [arrowhead="diamond", arrowtail="none", fontcolor="black", label="tester", style="solid"];
+"kg_asm.Preferences" -> "kg_asm.DecisionSupport" [arrowhead="odiamond", arrowtail="none", fontcolor="black", label="preferences", style="solid"];
+}

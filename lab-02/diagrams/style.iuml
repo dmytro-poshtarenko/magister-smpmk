@@ -1,0 +1,26 @@
+' Спільне оформлення діаграм: чорно-біла нотація UML, шрифт Arial
+skinparam dpi 200
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam monochrome true
+skinparam shadowing false
+skinparam roundCorner 6
+skinparam backgroundColor white
+skinparam ArrowColor black
+skinparam ArrowThickness 1
+skinparam packageStyle rectangle
+skinparam usecase {
+  BackgroundColor white
+  BorderColor black
+}
+skinparam actorStyle default
+skinparam class {
+  BackgroundColor white
+  BorderColor black
+  AttributeIconSize 0
+}
+skinparam note {
+  BackgroundColor white
+  BorderColor black
+}
+hide circle

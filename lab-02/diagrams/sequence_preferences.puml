@@ -1,0 +1,42 @@
+@startuml sequence_preferences
+!include style.iuml
+skinparam sequenceMessageAlign left
+skinparam maxMessageSize 150
+hide footbox
+autonumber
+
+actor "ОПР" as D
+boundary ":SynthesisCLI" as CLI
+entity ":Preferences" as P
+control ":DecisionSupport" as DS
+control ":ModelSynthesizer" as SYN
+control ":ModelTester" as TST
+
+D -> CLI : парні порівняння критеріїв,\nпороги S_max, H_min, δ
+activate CLI
+CLI -> P ** : create(pairwise, S_max, H_min, δ)
+CLI -> P : ahp
+activate P
+P -> P : ahp_weights(pairwise)
+P --> CLI : ваги w, CR
+deactivate P
+alt CR ≥ 0,1
+  CLI --> D : переглянути парні порівняння
+else CR < 0,1
+  CLI -> DS ** : create(preferences)
+  CLI -> DS : evaluate(series, кандидати M1–M7)
+  activate DS
+  loop для кожної опорної моделі
+    DS -> SYN : synthesize(series, reference)
+    DS -> TST : horizon(series, reference)
+    DS -> TST : sx(model, series)
+  end
+  DS --> CLI : характеристики моделей
+  CLI -> DS : rank(rows)
+  DS -> P : weights
+  DS --> CLI : корисні моделі за спаданням U
+  deactivate DS
+  CLI --> D : рекомендована модель і рейтинг
+end
+deactivate CLI
+@enduml

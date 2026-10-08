@@ -1,0 +1,32 @@
+@startuml use_case
+!include style.iuml
+actor "Дослідник" as R
+actor "ОПР" as D
+actor "Система\nмоніторингу" as S
+rectangle "Синтезатор прогнозних моделей" {
+  usecase "Завантажити\nпервинний опис" as UC1
+  usecase "Задати\nопорну модель" as UC2
+  usecase "Синтезувати\nпрогнозну модель" as UC3
+  usecase "Спрогнозувати\nзначення функції" as UC5
+  usecase "Сформувати\nпереваги ОПР" as UC6
+  usecase "Обрати модель\nза перевагами" as UC7
+  usecase "Скласти умовні\nрівняння Гауса" as UC31
+  usecase "Розв'язати систему\nнормальних рівнянь" as UC32
+  usecase "Визначити\nхарактеристики моделі" as UC4
+  usecase "Визначити горизонт\nпрогнозування" as UC41
+}
+R --> UC1
+R --> UC2
+R --> UC3
+R --> UC5
+D --> UC5
+D --> UC6
+D --> UC7
+UC1 --> S
+UC3 ..> UC31 : <<include>>
+UC3 ..> UC32 : <<include>>
+UC3 ..> UC4 : <<include>>
+UC4 ..> UC41 : <<include>>
+UC7 ..> UC3 : <<include>>
+UC7 ..> UC6 : <<include>>
+@enduml
