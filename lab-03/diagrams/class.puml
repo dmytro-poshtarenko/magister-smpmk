@@ -1,0 +1,118 @@
+@startuml class
+!include style.iuml
+skinparam linetype ortho
+skinparam nodesep 30
+skinparam ranksep 45
+hide empty members
+
+class ModelSynthesizer <<control>> {
+  + run(X, y, names, n_A, n_B, try_all): dict
+}
+
+class MVDFormer <<A1>> {
+  + cv_min: float
+  + r_min: float
+  + form(X, y, names, n_A, n_B): Dataset
+}
+
+class TestScenario <<A2>> {
+  + stages(): (етап, список АСМ)
+}
+
+abstract class ASM <<A3>> {
+  + name: str
+  + kind: str
+  + {abstract} synthesize(data): Model
+}
+
+class LinearASM <<A31>>
+class PerceptronASM <<A32>> {
+  + hidden: tuple
+  + l2: float
+}
+class PolynomialASM <<A33>>
+class MultilayerASM <<A3n>> {
+  + freedom: int
+  + max_layers: int
+  + min_gain: float
+  + forms: str
+}
+
+class ModelTester <<A4>> {
+  + test(asm, model, data): TestResult
+}
+
+class Controller <<A5>> {
+  + sx_limit: float
+  + check(result): bool
+}
+
+class AlgorithmConstructor <<A6>> {
+  + freedoms: tuple
+  + single_layer(): list
+  + multilayer(): list
+}
+
+class Dataset <<entity>> {
+  + X, y: ndarray
+  + names: list
+  + n_train, n_check: int
+  + removed: dict
+  + part(name): (X, y)
+}
+
+abstract class Model <<entity>> {
+  + params: int
+  + layers: int
+  + {abstract} predict(X): ndarray
+}
+
+class LinearModel <<entity>>
+class PerceptronModel <<entity>>
+class PolynomialModel <<entity>>
+class MultilayerModel <<entity>> {
+  + output: str
+  + history: list
+  + used(): list
+}
+
+class Node <<entity>> {
+  + key: str
+  + layer: int
+  + inputs: tuple
+  + indicators: set
+}
+
+class Partial <<entity>> {
+  + kind: L | B | Q | N
+  + predict(u, v): ndarray
+}
+
+class TestResult <<entity>> {
+  + asm: str
+  + sx: dict
+  + accepted: bool
+}
+
+ModelSynthesizer *-- MVDFormer
+ModelSynthesizer *-- TestScenario
+ModelSynthesizer *-- ModelTester
+ModelSynthesizer *-- Controller
+TestScenario o-- AlgorithmConstructor
+AlgorithmConstructor ..> ASM : <<create>>
+ASM <|-- LinearASM
+ASM <|-- PerceptronASM
+ASM <|-- PolynomialASM
+ASM <|-- MultilayerASM
+MVDFormer ..> Dataset : <<create>>
+ASM ..> Model : <<create>>
+Model <|-- LinearModel
+Model <|-- PerceptronModel
+Model <|-- PolynomialModel
+Model <|-- MultilayerModel
+MultilayerModel *-- "1..*" Node
+Node *-- "0..1" Partial
+Partial o-- "0..1" PerceptronModel
+ModelTester ..> TestResult : <<create>>
+Controller ..> TestResult
+@enduml

@@ -1,0 +1,50 @@
+// Ієрархія моделей об'єкта моніторингу: верхній (річний) і нижній (квартальний) рівні.
+digraph hierarchy {
+  graph [rankdir=TB, fontname="Arial", fontsize=12, dpi=200, nodesep=0.4, ranksep=0.45, compound=true];
+  node [shape=box, fontname="Arial", fontsize=12, color=black, margin="0.15,0.08"];
+  edge [fontname="Arial", fontsize=11, color=black, arrowsize=0.7];
+
+  mvd  [label=<Квартальний МВД: x<SUB>1</SUB>…x<SUB>6</SUB>, y<SUB>t,T</SUB>>];
+  a1   [label=<A1: відбір інформативних показників>];
+  amvd [label=<Річний МВД<BR/>Y<SUB>T−1</SUB>, E<SUB>T</SUB>, N<SUB>T</SUB>>];
+  plan [label=<Плановий ліміт<BR/>скиду E<SUB>T</SUB>>];
+  qrows [label=<Квартальні ряди<BR/>y<SUB>t,T</SUB>, t = 1…4>];
+
+  subgraph cluster_up {
+    label=<<B>Верхній рівень — середньорічні значення</B>>; labeljust=l; style=solid; color=black;
+    up [label=<Синтезатор: тип АСМ і n кращих моделей<BR/>Y<SUB>T</SUB> = F(Y<SUB>T−1</SUB>, E<SUB>T</SUB>)>];
+  }
+
+  subgraph cluster_low {
+    label=<<B>Нижній рівень — квартальні значення</B>>; labeljust=l; style=solid; color=black;
+    q1 [label=<Квартал 1<BR/>y<SUB>1,T</SUB> = f<SUB>1</SUB>(y<SUB>4,T−1</SUB>, Y<SUB>T</SUB>)>];
+    q2 [label=<Квартал 2<BR/>y<SUB>2,T</SUB> = f<SUB>2</SUB>(y<SUB>1,T</SUB>, Y<SUB>T</SUB>)>];
+    q3 [label=<Квартал 3<BR/>y<SUB>3,T</SUB> = f<SUB>3</SUB>(y<SUB>2,T</SUB>, Y<SUB>T</SUB>)>];
+    q4 [label=<Квартал 4<BR/>y<SUB>4,T</SUB> = f<SUB>4</SUB>(y<SUB>3,T</SUB>, Y<SUB>T</SUB>)>];
+    delay [label=<Затримка на рік (−1)>];
+    {rank=same; ordering=out; q1; q2; q3; q4;}
+  }
+
+  bal [label=<Критерій балансу: середнє сезонних<BR/>прогнозів порівняно з Y<SUB>T</SUB>>];
+  out [label=<Довготривалий прогноз y<SUB>1,T</SUB>…y<SUB>4,T</SUB>>];
+
+
+  mvd -> a1;
+  a1 -> amvd [label=" середньорічні\n значення"];
+  a1 -> qrows [label=" квартальні\n значення"];
+  amvd -> up;
+  plan -> up;
+  qrows -> q1 [lhead=cluster_low, label=" навчання\n моделей"];
+  up -> q1 [label=<Y<SUB>T</SUB>>];
+  up -> q2 [label=<Y<SUB>T</SUB>>];
+  up -> q3 [label=<Y<SUB>T</SUB>>];
+  up -> q4 [label=<Y<SUB>T</SUB>>];
+  q1 -> q2 [label=<y<SUB>1,T</SUB>>];
+  q2 -> q3 [label=<y<SUB>2,T</SUB>>];
+  q3 -> q4 [label=<y<SUB>3,T</SUB>>];
+  q4 -> delay [label=<y<SUB>4,T</SUB>>];
+  delay -> q1 [label=<y<SUB>4,T−1</SUB>>, constraint=false];
+  q4 -> bal [ltail=cluster_low, label=<y<SUB>1,T</SUB>…y<SUB>4,T</SUB>>];
+  up -> bal [label=<Y<SUB>T</SUB>>];
+  bal -> out;
+}

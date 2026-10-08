@@ -1,0 +1,50 @@
+digraph G {
+graph [rankdir=LR, fontname="Arial", dpi=200, nodesep=0.25, ranksep=0.55];
+node [fontname="Arial", fontsize=12, color=black];
+edge [color=black, arrowsize=0.7];
+"x1" [shape=box, label="x1"];
+"x2" [shape=box, label="x2"];
+"x3" [shape=box, label="x3"];
+"x4" [shape=box, label="x4"];
+"z1.5" [shape=ellipse, label="z1.5\nN"];
+"x1" -> "z1.5";
+"x3" -> "z1.5";
+"z1.6" [shape=ellipse, label="z1.6\nQ"];
+"x1" -> "z1.6";
+"x3" -> "z1.6";
+"z2.1" [shape=ellipse, label="z2.1\nQ"];
+"z1.5" -> "z2.1";
+"x4" -> "z2.1";
+"z2.3" [shape=ellipse, label="z2.3\nN"];
+"z1.5" -> "z2.3";
+"x4" -> "z2.3";
+"z2.4" [shape=ellipse, label="z2.4\nN"];
+"z1.6" -> "z2.4";
+"x4" -> "z2.4";
+"z3.5" [shape=ellipse, label="z3.5\nN"];
+"z2.1" -> "z3.5";
+"z2.3" -> "z3.5";
+"z3.6" [shape=ellipse, label="z3.6\nB"];
+"z2.1" -> "z3.6";
+"z2.4" -> "z3.6";
+"z4.2" [shape=ellipse, label="z4.2\nN"];
+"z3.6" -> "z4.2";
+"x2" -> "z4.2";
+"z4.5" [shape=ellipse, label="z4.5\nQ"];
+"z3.6" -> "z4.5";
+"x2" -> "z4.5";
+"z5.1" [shape=ellipse, label="z5.1\nQ"];
+"z4.5" -> "z5.1";
+"z3.5" -> "z5.1";
+"z6.1" [shape=ellipse, label="z6.1\nQ"];
+"z5.1" -> "z6.1";
+"z4.2" -> "z6.1";
+{rank=same; "x1"; "x2"; "x3"; "x4";}
+{rank=same; "z1.5"; "z1.6";}
+{rank=same; "z2.1"; "z2.3"; "z2.4";}
+{rank=same; "z3.5"; "z3.6";}
+{rank=same; "z4.2"; "z4.5";}
+{rank=same; "z5.1";}
+{rank=same; "z6.1";}
+"z6.1" -> "y" ; "y" [shape=plaintext, label="ŷ"];
+}

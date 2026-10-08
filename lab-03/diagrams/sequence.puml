@@ -1,0 +1,45 @@
+@startuml sequence
+!include style.iuml
+skinparam maxMessageSize 160
+skinparam sequenceMessageAlign center
+
+actor "Підсистема\nперетворення\nінформації" as U
+participant "Синтезатор" as S
+participant "A1\nФормувач МВД" as A1
+participant "A2\nСценарій" as A2
+participant "A6\nКонструктор\nалгоритмів" as A6
+participant "A3x\nАСМ" as A3
+participant "A4\nВипробовувач" as A4
+participant "A5\nКонтролер" as A5
+
+U -> S : первинний опис, граничне S<sub>x</sub>
+S -> A1 : form(X, y, n<sub>A</sub>, n<sub>B</sub>)
+A1 --> S : МВД (без неінформативних\nі дубльованих показників)
+S -> A2 : наступний етап
+A2 -> A6 : single_layer()
+A6 --> A2 : МНК, перцептрон, поліном КГ
+A2 --> S : одношарові АСМ
+loop для кожного АСМ етапу
+  S -> A3 : synthesize(МВД)
+  A3 --> S : модель
+  S -> A4 : test(модель, МВД)
+  A4 --> S : S<sub>x</sub>(A), S<sub>x</sub>(B), S<sub>x</sub>(C)
+  S -> A5 : check(S<sub>x</sub>(C))
+  A5 --> S : прийнято / відхилено
+end
+alt жодна одношарова модель не пройшла контролер
+  S -> A2 : наступний етап (сигнал A5 → A6)
+  A2 -> A6 : multilayer()
+  A6 --> A2 : багатошарові АСМ, F = 4, 6, 8
+  A2 --> S : багатошарові АСМ
+  loop для кожного багатошарового АСМ
+    S -> A3 : synthesize(МВД)
+    A3 --> S : багатошарова модель
+    S -> A4 : test(модель, МВД)
+    A4 --> S : S<sub>x</sub>(A), S<sub>x</sub>(B), S<sub>x</sub>(C)
+    S -> A5 : check(S<sub>x</sub>(C))
+    A5 --> S : прийнято / відхилено
+  end
+end
+S --> U : перша модель, що пройшла контролер,\nі журнал випробувань
+@enduml
